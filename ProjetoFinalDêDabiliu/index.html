@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MetalWatch — Painel de Preços</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="container">
+    <header>
+      <div class="live-badge">
+        <span class="live-dot"></span>
+        <span>AO VIVO</span>
+      </div>
+      <h1 class="title">MetalWatch</h1>
+      <p class="subtitle">Painel de Preços em Tempo Real</p>
+    </header>
+    <div class="metal-selector" role="group" aria-label="Selecionar metal">
+      <button class="metal-btn active" data-metal="gold" aria-pressed="true">
+        <span class="metal-icon">🥇</span>
+        <span class="metal-name">Ouro</span>
+      </button>
+      <button class="metal-btn" data-metal="coal" aria-pressed="false">
+        <span class="metal-icon">🪨</span>
+        <span class="metal-name">Carvão</span>
+      </button>
+      <button class="metal-btn" data-metal="emerald" aria-pressed="false">
+        <span class="metal-icon">💚</span>
+        <span class="metal-name">Esmeralda</span>
+      </button>
+    </div>
+    <div class="price-card gold-theme" id="priceCard">
+      <div class="price-header">
+        <div class="price-meta">
+          <span class="metal-label" id="metalLabel">Ouro</span>
+          <span class="price-unit" id="priceUnit">por troy oz</span>
+        </div>
+        <div class="minute-change-badge" id="minuteBadge">
+          <span id="minuteArrow">—</span>
+          <span id="minutePct">0.00%</span>
+        </div>
+      </div>
+      <div class="price-display">
+        <span class="currency">$</span>
+        <span class="price-value" id="currentPrice">3.215,40</span>
+      </div>
+      <div class="buy-signal" id="buySignal">
+        <span id="buySignalText">⏳ Calculando...</span>
+      </div>
+    </div>
+    <div class="expert-card">
+      <div class="expert-header">
+        <span>📊</span>
+        <span>Recomendação de Especialistas</span>
+      </div>
+      <div class="expert-row">
+        <span class="expert-row-label">Preço Ideal de Compra</span>
+        <span class="expert-row-value green" id="idealPrice">$3.000,00</span>
+      </div>
+      <div class="expert-row">
+        <span class="expert-row-label">Diferença do Ideal</span>
+        <span class="expert-row-value" id="priceGap">+$215,40 acima</span>
+      </div>
+      <p class="expert-note" id="expertNote">Aguardando dados...</p>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-label">Mínima do Dia</span>
+        <span class="stat-value" id="dayLow">—</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Máxima do Dia</span>
+        <span class="stat-value" id="dayHigh">—</span>
+      </div>
+    </div>
+    <div class="update-section">
+      <button class="update-btn" id="updateBtn">
+        <span class="update-icon">↻</span>Atualizar</button>
+      <p class="update-time" id="updateTime">Atualizado agora mesmo</p>
+    </div>
+    <button class="history-toggle-btn" id="historyToggle">
+      📋 Histórico (últimos 30 min)
+      <span class="history-arrow" id="historyArrow">▼</span>
+    </button>
+    <div class="history-panel" id="historyPanel" aria-expanded="false">
+      <div class="history-inner">
+        <p class="history-header-label">Variações por minuto — <span id="historyMetalLabel">Ouro</span></p>
+        <div class="history-list" id="historyList">
+          <p class="history-empty">Aguardando o primeiro minuto de dados...</p>
+        </div>
+      </div>
+    </div>
+    <button class="goals-btn" id="goalsBtn">
+      🎯 Metas Pessoais
+    </button>
+  </div>
+  <div class="modal-overlay" id="goalsOverlay" role="dialog" aria-modal="true" aria-labelledby="goalsTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="goalsTitle">🎯 Metas Pessoais</h2>
+        <button class="modal-close" id="goalsClose" aria-label="Fechar">✕</button>
+      </div>
+      <p class="modal-subtitle">Simule compras e vendas com os preços ao vivo</p>
+      <div class="modal-toast" id="modalToast"></div>
+      <div class="portfolio-list">
+        <div class="portfolio-card" data-metal="gold">
+          <div class="pc-header">
+            <span class="pc-icon">🥇</span>
+            <div class="pc-meta">
+              <span class="pc-name">Ouro</span>
+              <span class="pc-unit">troy oz</span>
+            </div>
+            <div class="pc-live-price" id="pcPriceGold">—</div>
+          </div>
+          <div class="pc-holdings">
+            <div class="pc-stat">
+              <span class="pc-stat-label">Unidades</span>
+              <span class="pc-stat-value" id="pcUnitsGold">0</span>
+            </div>
+            <div class="pc-stat">
+              <span class="pc-stat-label">Preço Médio</span>
+              <span class="pc-stat-value" id="pcAvgGold">—</span>
+            </div>
+            <div class="pc-stat">
+              <span class="pc-stat-label">Resultado</span>
+              <span class="pc-stat-value" id="pcResultGold">—</span>
+            </div>
+          </div>
+          <div class="pc-actions">
+            <button class="pc-buy-btn" data-metal="gold">Comprar 1 unidade</button>
+            <button class="pc-sell-btn" data-metal="gold" disabled>Vender tudo</button>
+          </div>
+        </div>
+        <div class="portfolio-card" data-metal="coal">
+          <div class="pc-header">
+            <span class="pc-icon">🪨</span>
+            <div class="pc-meta">
+              <span class="pc-name">Carvão</span>
+              <span class="pc-unit">ton. métrica</span>
+            </div>
+            <div class="pc-live-price" id="pcPriceCoal">—</div>
+          </div>
+          <div class="pc-holdings">
+            <div class="pc-stat">
+              <span class="pc-stat-label">Unidades</span>
+              <span class="pc-stat-value" id="pcUnitsCoal">0</span>
+            </div>
+            <div class="pc-stat">
+              <span class="pc-stat-label">Preço Médio</span>
+              <span class="pc-stat-value" id="pcAvgCoal">—</span>
+            </div>
+            <div class="pc-stat">
+              <span class="pc-stat-label">Resultado</span>
+              <span class="pc-stat-value" id="pcResultCoal">—</span>
+            </div>
+          </div>
+          <div class="pc-actions">
+            <button class="pc-buy-btn" data-metal="coal">Comprar 1 unidade</button>
+            <button class="pc-sell-btn" data-metal="coal" disabled>Vender tudo</button>
+          </div>
+        </div>
+        <div class="portfolio-card" data-metal="emerald">
+          <div class="pc-header">
+            <span class="pc-icon">💚</span>
+            <div class="pc-meta">
+              <span class="pc-name">Esmeralda</span>
+              <span class="pc-unit">quilate</span>
+            </div>
+            <div class="pc-live-price" id="pcPriceEmerald">—</div>
+          </div>
+          <div class="pc-holdings">
+            <div class="pc-stat">
+              <span class="pc-stat-label">Unidades</span>
+              <span class="pc-stat-value" id="pcUnitsEmerald">0</span>
+            </div>
+            <div class="pc-stat">
+              <span class="pc-stat-label">Preço Médio</span>
+              <span class="pc-stat-value" id="pcAvgEmerald">—</span>
+            </div>
+            <div class="pc-stat">
+              <span class="pc-stat-label">Resultado</span>
+              <span class="pc-stat-value" id="pcResultEmerald">—</span>
+            </div>
+          </div>
+          <div class="pc-actions">
+            <button class="pc-buy-btn" data-metal="emerald">Comprar 1 unidade</button>
+            <button class="pc-sell-btn" data-metal="emerald" disabled>Vender tudo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="javascript.js"></script>
+</body>
+</html>
